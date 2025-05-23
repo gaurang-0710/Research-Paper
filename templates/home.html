@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PDF Explainer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #f2f2f2, #e6f0ff);
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 15px;
+      padding: 30px 40px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 10px;
+      color: #555;
+    }
+
+    input[type="file"], select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #4a90e2;
+      color: #fff;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #357ABD;
+    }
+
+    .output {
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 10px;
+      background: #f4faff;
+      border-left: 5px solid #4a90e2;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    audio, video {
+      margin-top: 10px;
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+  <form id="uploadForm" onsubmit="handleUpload(event)">
+    {% csrf_token %}
+    <h2>📃Research Paper Explainer</h2>
+
+    <label for="pdfInput">📄 Choose PDF File:</label>
+    <input type="file" id="pdfInput" name="pdf" accept=".pdf">
+
+    <label for="typeSelect">🎯 Select Explanation Type:</label>
+    <select id="typeSelect" name="type">
+      <option value="text">Text</option>
+      <option value="audio">Audio</option>
+      <option value="video">Video</option>
+    </select>
+
+    <button type="submit">Get Explanation</button>
+  </form>
+
+    <div class="output" id="outputArea"></div>
+  </div>
+
+  <script>
+  function handleUpload(event) {
+    event.preventDefault();  // Stop form from submitting the normal way
+
+    const fileInput = document.getElementById('pdfInput');
+    const type = document.getElementById('typeSelect').value;
+    const output = document.getElementById('outputArea');
+
+    if (!fileInput.files.length) {
+      output.innerHTML = "❗ Please select a PDF file first.";
+      return;
+    }
+
+    const fileName = fileInput.files[0].name;
+    const extension = fileName.split(".").pop().toLowerCase();
+
+    if (extension !== "pdf") {
+      output.innerHTML = "<strong>❗ Please upload a PDF file only.</strong>";
+      return;
+    }
+
+    switch (type) {
+      case 'text':
+        output.innerHTML = `<strong>📝 Text Explanation:</strong><br>This is a summary of <b>${fileName}</b>.`;
+        break;
+      case 'audio':
+        output.innerHTML = `<strong>🔊 Audio Explanation:</strong><br><audio controls>
+                              <source src="sample.mp3" type="audio/mpeg">
+                              Your browser does not support the audio element.
+                            </audio><br>(Simulated audio for "${fileName}")`;
+        break;
+      case 'video':
+        output.innerHTML = `<strong>🎬 Video Explanation:</strong><br><video controls>
+                              <source src="sample.mp4" type="video/mp4">
+                              Your browser does not support the video element.
+                            </video><br>(Simulated video for "${fileName}")`;
+        break;
+    }
+  }
+</script>
+
+</body>
+</html>
