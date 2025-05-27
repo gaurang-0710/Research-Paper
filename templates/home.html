@@ -96,7 +96,7 @@
 
   <div class="container">
 
-  <form id="uploadForm" method="post">
+  <form id="uploadForm" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <h2>📃Research Paper Explainer</h2>
 
@@ -113,7 +113,24 @@
     <button type="submit">Get Explanation</button>
   </form>
 
-    <div class="output" id="outputArea"></div>
+    <div class="output" id="outputArea">
+      {% if output_type == "text" %}
+        <h3>📝 Text Explanation:</h3>
+        <p>{{ explanation }}</p>
+      {% elif output_type == "audio" %}
+        <h3>🔊 Audio Explanation:</h3>
+        <audio controls>
+          <source src="{{ audio_url }}" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+      {% elif output_type == "video" %}
+        <h3>🎬 Video Explanation:</h3>
+        <video controls width="600">
+          <source src="{{ video_url }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      {% endif %}
+    </div>
   </div>
 
   <script>
